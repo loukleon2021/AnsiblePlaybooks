@@ -1,0 +1,27 @@
+- name: Install WebApp on Windows
+  hosts: windows
+  tasks:
+    - name: Install git
+      win_chocolatey:
+        name: git
+        state: latest
+    - name: Install Python
+      win_chocolatey:
+        name: python
+        state: latest
+    - name: Install Docker Desktop
+      win_chocolatey:
+        name: docker-desktop
+        state: present
+    - name: Create Folder for WebApp
+      win_file:
+        path: C:\repos\newWebApp2
+        state: directory
+    - name: Pull Git Repository
+      win_command: cmd.exe /c git clone hhttps://github.com/nmenant/basic-app.git C:\repos\newWebApp2
+    - name: Ensure Docker Desktop is up and running
+      win_service:
+        name: com.docker.service
+        state: started
+    - name: Start WebApp
+      win_command: cmd.exe /c docker-compose -f c:\repos\newWebApp2\docker-compose.yml up -d
